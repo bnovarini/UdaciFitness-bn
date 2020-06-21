@@ -64,6 +64,16 @@ export default class AddEntry extends Component {
     // Clear local notification
   };
 
+  reset = () => {
+    const key = timeToString();
+
+    // Update Redux
+
+    // Route to Home
+
+    // Update "DB"
+  };
+
   render() {
     const metaInfo = getMetricMetaInfo();
 
