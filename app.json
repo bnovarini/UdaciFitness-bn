@@ -2,6 +2,7 @@
   "name": "UdaciFitness",
   "displayName": "UdaciFitness",
   "expo": {
+    "sdkVersion": "37.0.0",
     "name": "UdaciFitness",
     "version": "1.0.0",
     "platforms": ["ios", "android", "web"],
