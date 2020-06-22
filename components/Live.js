@@ -10,6 +10,7 @@ import { Foundation } from "@expo/vector-icons";
 import { purple, white } from "../utils/colors";
 import * as Permissions from "expo-permissions";
 import * as Location from "expo-location";
+import { calculateDirection } from "../utils/helpers";
 
 export default class Live extends Component {
   state = {
@@ -19,6 +20,7 @@ export default class Live extends Component {
   };
 
   componentDidMount() {
+    this.askPermission();
     Permissions.getAsync(Permissions.LOCATION)
       .then(({ status }) => {
         if (status === "granted") {
@@ -34,7 +36,19 @@ export default class Live extends Component {
       });
   }
 
-  askPermission = () => {};
+  askPermission = () => {
+    Permissions.askAsync(Permissions.LOCATION)
+      .then(({ status }) => {
+        if (status === "granted") {
+          return this.setLocation();
+        }
+
+        this.setState(() => ({ status }));
+      })
+      .catch((error) =>
+        console.warn("error asking Location permission: ", error)
+      );
+  };
 
   setLocation = () => {
     Location.watchPositionAsync(
@@ -90,16 +104,20 @@ export default class Live extends Component {
       <View style={styles.container}>
         <View style={styles.directionContainer}>
           <Text style={styles.header}>You're heading</Text>
-          <Text style={styles.direction}>North</Text>
+          <Text style={styles.direction}>{direction}</Text>
         </View>
         <View style={styles.metricContainer}>
           <View style={styles.metric}>
             <Text style={[styles.header, { color: white }]}>Altitude</Text>
-            <Text style={[styles.subHeader, { color: white }]}>{200} feet</Text>
+            <Text style={[styles.subHeader, { color: white }]}>
+              {Math.round(coords.altitude * 3.2808)} Feet
+            </Text>
           </View>
           <View style={styles.metric}>
             <Text style={[styles.header, { color: white }]}>Speed</Text>
-            <Text style={[styles.subHeader, { color: white }]}>{300} MPH</Text>
+            <Text style={[styles.subHeader, { color: white }]}>
+              {(coords.speed * 2.2369).toFixed(1)} MPH
+            </Text>
           </View>
         </View>
       </View>
